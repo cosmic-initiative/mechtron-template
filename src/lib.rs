@@ -5,7 +5,6 @@ extern crate lazy_static;
 
 #[macro_use]
 extern crate cosmic_macros;
-//mod html;
 
 use cosmic_macros::handler_sync;
 use cosmic_space::err::SpaceErr;
@@ -41,7 +40,7 @@ impl Platform for MyPlatform {
         Self: Sized,
     {
         let mut factories = MechtronFactories::new();
-        factories.add(HelloGoodbyeMechtronFactory::new());
+        factories.add(MyMechtronFactory::new());
         Ok(factories)
     }
 }
@@ -52,49 +51,40 @@ impl MyPlatform {
     }
 }
 
-pub struct HelloGoodbyeMechtronFactory {}
+pub struct MyMechtronFactory {}
 
-impl HelloGoodbyeMechtronFactory {
+impl MyMechtronFactory {
     pub fn new() -> Self {
         Self {}
     }
 }
 
-impl<P> MechtronFactory<P> for HelloGoodbyeMechtronFactory
+impl<P> MechtronFactory<P> for MyMechtronFactory
 where
     P: Platform + 'static,
 {
     fn name(&self) -> String {
-        "hello-goodbye".to_string()
+        "my-mechtron".to_string()
     }
 
     fn lifecycle(&self, skel: MechtronSkel<P>) -> Result<Box<dyn MechtronLifecycle<P>>, P::Err> {
-        Ok(Box::new(HelloGoodbyeMechtron::restore(skel, (), ())))
+        Ok(Box::new(MyMechtron::restore(skel, (), ())))
     }
 
     fn handler(&self, skel: MechtronSkel<P>) -> Result<Box<dyn DirectedHandler>, P::Err> {
-        Ok(Box::new(HelloGoodbyeMechtron::restore(skel, (), ())))
+        Ok(Box::new(MyMechtron::restore(skel, (), ())))
     }
 
-    /*
-    fn handler(&self, details: &Details, transmitter: ProtoTransmitterBuilder) -> Result<Box<dyn DirectedHandler>, P::Err> {
-                let phantom:PhantomData<P> = PhantomData::default();
-        let skel = MechtronSkel::new(details.clone(), phantom );
-
-        Ok(Box::new(MyApp::restore(skel,(),(),())))
-    }
-
-     */
 }
 
-pub struct HelloGoodbyeMechtron<P>
+pub struct MyMechtron<P>
 where
     P: Platform + 'static,
 {
     skel: MechtronSkel<P>,
 }
 
-impl<P> Mechtron<P> for HelloGoodbyeMechtron<P>
+impl<P> Mechtron<P> for MyMechtron<P>
 where
     P: Platform + 'static,
 {
@@ -103,14 +93,14 @@ where
     type State = ();
 
     fn restore(skel: Self::Skel, _cache: Self::Cache, _state: Self::State) -> Self {
-        HelloGoodbyeMechtron { skel }
+        MyMechtron { skel }
     }
 }
 
-impl<P> MechtronLifecycle<P> for HelloGoodbyeMechtron<P> where P: Platform + 'static {}
+impl<P> MechtronLifecycle<P> for MyMechtron<P> where P: Platform + 'static {}
 
 #[handler_sync]
-impl<P> HelloGoodbyeMechtron<P>
+impl<P> MyMechtron<P>
 where
     P: Platform + 'static,
 {
