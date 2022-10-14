@@ -1,0 +1,22 @@
+[package]
+name = "{{project-name}}"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[features]
+
+[dependencies]
+
+mechtron="0.3.1"
+cosmic-space="0.3.1"
+cosmic-macros="0.3.1"
+lazy_static="1.4.0"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"
